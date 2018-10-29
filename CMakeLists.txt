@@ -10,10 +10,11 @@ set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/run)
 
 # create the main executable
 ## add additional .cpp files if needed
-add_executable(a2-ece650 a2-ece650.cpp )
+add_executable(a2-ece650 a2-ece650.cpp a2-graph.cpp )
 add_executable(a3-ece650 a3-ece650.cpp )
+add_executable(rgen rgen.cpp )
 
 # create the executable for tests
 add_executable(tests test.cpp)
 install(PROGRAMS a1-ece650.py DESTINATION bin)
-install(TARGETS a2-ece650 a3-ece650 RUNTIME DESTINATION bin)
+install(TARGETS a2-ece650 a3-ece650 rgen RUNTIME DESTINATION bin)
