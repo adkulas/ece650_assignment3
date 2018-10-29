@@ -90,8 +90,23 @@ class Graph(object):
         self.vertices = {}
         self.edges = set([])
         self.intersections = set([])
-    
+
     def __str__(self):
+
+        v_map = {v_id: idx for idx, v_id in enumerate(self.vertices.values)}
+        string = 'V {0}\n'.format(len(self.vertices))
+        string += 'E {\n'
+        if self.edges:
+            for edge in self.edges:
+                tmp = list(edge)
+                string += '  <{0},{1}>,\n'.format(tmp[0],tmp[1])
+            string = string[:-2] + '\n}'
+        else:
+            string += '}'
+
+        return string
+
+    def old__str__(self):
         string = 'V = {\n'
         for v, v_id in sorted(self.vertices.items(), key=lambda x: x[1]):
             if type(v[0]) == 'float' or type(v[1]) == 'float':
