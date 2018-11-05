@@ -3,7 +3,7 @@
 #include <limits>
 #include <regex>
 #include "a2-ece650.hpp"
-#include "graph.hpp"
+#include "a2-graph.hpp"
 
 std::vector< std::pair<int,int> > parse(std::string s) {
     std::pair<int, int> edge;
@@ -50,7 +50,8 @@ int main() {
         switch(cmd) {
             
             case 'V': case 'v':
-                std::cin >> vertices;      
+                std::cin >> vertices;
+                std::cout << "V " << vertices << std::endl;    
                 // Create a new graph
                 if (vertices >= 0) {
                     delete g;
@@ -65,6 +66,7 @@ int main() {
             
             case 'E': case 'e':
                 std::cin >> edges_input;
+                std::cout << "E " << edges_input << std::endl;
                 g->add_edges( parse(edges_input) );
                 
                 std::cin.clear();
