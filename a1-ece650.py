@@ -93,14 +93,16 @@ class Graph(object):
 
     def __str__(self):
 
-        v_map = {v_id: idx for idx, v_id in enumerate(self.vertices.values)}
+        v_map = {v_id: idx for idx, v_id in enumerate(self.vertices.values())}
         string = 'V {0}\n'.format(len(self.vertices))
-        string += 'E {\n'
+        string += 'E {'
         if self.edges:
             for edge in self.edges:
                 tmp = list(edge)
-                string += '  <{0},{1}>,\n'.format(tmp[0],tmp[1])
-            string = string[:-2] + '\n}'
+                v_1 = v_map[tmp[0]]
+                v_2 = v_map[tmp[1]]
+                string += '  <{0},{1}>,\n'.format(v_1, v_2)
+            string = '}'
         else:
             string += '}'
 
