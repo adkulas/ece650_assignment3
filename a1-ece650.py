@@ -6,7 +6,7 @@ import cmd
 import re
 import math
 
-# print(sys.version_info)
+print(sys.version_info)
 class ProgramLoop(cmd.Cmd):
     prompt = ''
     use_rawinput = 0
@@ -101,8 +101,8 @@ class Graph(object):
                 tmp = list(edge)
                 v_1 = v_map[tmp[0]]
                 v_2 = v_map[tmp[1]]
-                string += '  <{0},{1}>,\n'.format(v_1, v_2)
-            string = '}'
+                string += '<{0},{1}>,'.format(v_1, v_2)
+            string = string[:-1] + '}'
         else:
             string += '}'
 
