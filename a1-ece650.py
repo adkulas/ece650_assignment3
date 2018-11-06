@@ -8,7 +8,7 @@ import cmd
 import re
 import math
 
-print(sys.version_info)
+# print(sys.version_info)
 class ProgramLoop(cmd.Cmd):
     prompt = ''
     use_rawinput = 0
