@@ -68,7 +68,6 @@ int main (int argc, char **argv) {
             cint_value = atoi(cvalue.c_str());
             if(cint_value < 1) {
                 std::cerr << "Error: Option -c must have value >= 1" << std::endl;
-            
                 return 1;
             }
             break;
@@ -81,21 +80,18 @@ int main (int argc, char **argv) {
         }
     std::cout << "s=" << sint_value << "n=" << nint_value << "l=" << lint_value << "c=" << cint_value << std::endl;
 
-   
     std::vector<pid_t> kids;
     pid_t child_pid;    
-    // create a pipe
+    // create pipes
     int pipe_rgen_to_a1[2];
     pipe(pipe_rgen_to_a1);
 
     int pipe_a1_to_a2[2];
     pipe(pipe_a1_to_a2);
     
-
     //-----------------------------------
     // RUN RGEN PROGARM CONCURRENTLY    
     // ----------------------------------
-
     child_pid = fork();
     if (child_pid == 0) {
         // redirect stdout to the pipe
