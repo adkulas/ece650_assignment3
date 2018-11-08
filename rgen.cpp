@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 template<class T>
 T read_urandom() {
@@ -12,11 +13,7 @@ T read_urandom() {
     if(urandom) //Check if stream is open
     {
         urandom.read(reinterpret_cast<char*>(&random_value), size); //Read from urandom
-        if(urandom) //Check if stream is ok, read succeeded
-        {
-            // std::cout << "Read random value: " << random_value << std::endl;
-        }
-        else //Read failed
+        if(!urandom) //Read Failed
         {
             std::cerr << "Failed to read from /dev/urandom" << std::endl;
         }
@@ -29,25 +26,26 @@ T read_urandom() {
     return random_value;
 }
 
+// Return a random integer N such that min <= N <= max.
+int random_int(int min, int max) {
+    int range = max-min;
+    int i = read_urandom<int>();
+    int result = (i % (range+1) + (range+1) ) % (range+1) + min;
+
+    return result;
+}
+
 char random_letter() {
     char rand_char;
     int i;
     i = (read_urandom<int>() % 26 + 26) % 26;   
-    if (read_urandom<int>() > 0) {
+    if (random_int(0,1)) {
         rand_char = 'A' + i;    
     } else {
         rand_char = 'a' + i;
     }
     
     return rand_char;
-}
-
-int random_int(int min, int max) {
-    int range = max-min;
-    int i = read_urandom<int>();
-    int result = i % (range+1) + max;
-
-    return result;
 }
 
 std::string random_word(int length=10) {
@@ -57,6 +55,42 @@ std::string random_word(int length=10) {
     }
     return result;
 }
+
+std::vector< std::pair<int,int> > generate_rand_street_segments(int nint_value, int coord_range) {
+    std::vector< std::pair<int,int> > street;
+    int num_segments = random_int(1, nint_value);
+
+    for(int i = 0; i < num_segments + 1; i++ ) {
+        std::pair<int, int> point;
+        point.first = random_int(-coord_range, coord_range);
+        point.second = random_int(-coord_range, coord_range);
+        street.push_back(point);
+        std::cout << "(" << point.first << "," << point.second << ")";
+    }
+    std::cout << std::endl;
+    //call to check street for error
+        //add here
+    return street;
+}
+
+std::string create_random_a_command(int sint_value, int nint_value, int cint_value) {
+    std::string result;
+    int num_streets = random_int(2, sint_value);
+    std::string street_name;
+    std::vector< std::pair<int,int> > street_points;
+    
+    street_name = random_word();
+    street_points = generate_rand_street_segments(nint_value, cint_value);
+
+    result = "a \"" + street_name + "\" ";
+    for( auto& p : street_points) {
+        result = result + "(" + std::to_string(p.first) + "," + std::to_string(p.second) + ")";
+    }
+    result += "\n";
+    return result;
+
+}
+
 
 int main (int argc, char **argv) {
     std::string svalue;
@@ -125,8 +159,12 @@ int main (int argc, char **argv) {
         // char tmp = 'A' + i;
         // std::cout << tmp << std::endl;
         // std::cout << random_word() << std::endl;
-        std::cout << random_int(50,60) << std::endl;
-    }  
+        // std::cout << random_int(50,60) << std::endl;
+        // std::cout << random_int(-20,20) << std::endl;
+        // generate_rand_street_segments(nint_value, cint_value);
+        std::cout << create_random_a_command(sint_value, nint_value, cint_value) << std::endl;
+    } 
+
     // sleep(5);
     // std::cout << "a \"Weber Street\" (2,-1) (2,2) (5,5) (5,6) (3,8)\n"
     //         << "a \"King Street S\" (4,2) (4,8)\n"
