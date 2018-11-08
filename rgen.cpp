@@ -4,27 +4,8 @@
 #include <iostream>
 #include <fstream>
 
-std::string generate_random_string() {
-    return 0;
-}
-
 template<class T>
-T read_urandom()
-{
-	union {
-		T value;
-		char cs[sizeof(T)];
-	} u;
-
-	std::ifstream rfin("/dev/urandom");
-	rfin.read(u.cs, sizeof(u.cs));
-	rfin.close();
-
-	return u.value;
-}
-
-template<class T>
-T generate_random_int() {
+T read_urandom() {
     T random_value; //Declare value to store data into
     size_t size = sizeof(random_value); //Declare size of data
     std::ifstream urandom("/dev/urandom", std::ios::in|std::ios::binary); //Open stream
@@ -33,7 +14,7 @@ T generate_random_int() {
         urandom.read(reinterpret_cast<char*>(&random_value), size); //Read from urandom
         if(urandom) //Check if stream is ok, read succeeded
         {
-            std::cout << "Read random value: " << random_value << std::endl;
+            // std::cout << "Read random value: " << random_value << std::endl;
         }
         else //Read failed
         {
@@ -45,9 +26,37 @@ T generate_random_int() {
     {
         std::cerr << "Failed to open /dev/urandom" << std::endl;
     }
-    return 0;
+    return random_value;
 }
 
+char random_letter() {
+    char rand_char;
+    int i;
+    i = (read_urandom<int>() % 26 + 26) % 26;   
+    if (read_urandom<int>() > 0) {
+        rand_char = 'A' + i;    
+    } else {
+        rand_char = 'a' + i;
+    }
+    
+    return rand_char;
+}
+
+int random_int(int min, int max) {
+    int range = max-min;
+    int i = read_urandom<int>();
+    int result = i % (range+1) + max;
+
+    return result;
+}
+
+std::string random_word(int length=10) {
+    std::string result;
+    for(int i=0; i < length; i++) {
+        result += random_letter();
+    }
+    return result;
+}
 
 int main (int argc, char **argv) {
     std::string svalue;
@@ -110,11 +119,14 @@ int main (int argc, char **argv) {
         }
     std::cerr << "[rgen]" << "s=" << sint_value << "n=" << nint_value << "l=" << lint_value << "c=" << cint_value << std::endl;
 
-    for(int i=0; i<10; i++) {
-        generate_random_int<int>();
-        std::cout << "read_urandom<int>: " << read_urandom<int>() << std::endl;
-        std::cout << "read_urandom<char>: " << read_urandom<int>() << std::endl;
-    }
+    for(int i=0; i<40; i++) {
+        // std::cout << "generate letter: " << generate_random_char() << std::endl;
+        // random_letter();
+        // char tmp = 'A' + i;
+        // std::cout << tmp << std::endl;
+        // std::cout << random_word() << std::endl;
+        std::cout << random_int(50,60) << std::endl;
+    }  
     // sleep(5);
     // std::cout << "a \"Weber Street\" (2,-1) (2,2) (5,5) (5,6) (3,8)\n"
     //         << "a \"King Street S\" (4,2) (4,8)\n"
