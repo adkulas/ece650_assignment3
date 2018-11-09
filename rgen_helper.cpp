@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <algorithm>
 #include "rgen_helper.hpp"
 
 template<class T>
@@ -49,7 +50,7 @@ char random_letter() {
     return rand_char;
 }
 
-std::string random_word(int length=10) {
+std::string random_word(int length=1) {
     std::string result;
     for(int i=0; i < length; i++) {
         result += random_letter();
@@ -90,4 +91,68 @@ std::string create_random_a_command(int sint_value, int nint_value, int cint_val
     result += "\n";
     return result;
 
+}
+
+// Constructor
+Rand_graph::Rand_graph(int sint_value, int nint_value, int cint_value):
+    sint_value(sint_value), nint_value(nint_value), cint_value(cint_value) {
+        generate_graph();
+    }
+
+//Private Functions
+std::vector< std::pair<int,int> > Rand_graph::generate_rand_street_segments() {
+    std::vector< std::pair<int,int> > street;
+    int num_segments = random_int(1, nint_value);
+    int coord_range = cint_value;
+
+    for(int i = 0; i < num_segments + 1; i++ ) {
+        std::pair<int, int> point;
+        point.first = random_int(-coord_range, coord_range);
+        point.second = random_int(-coord_range, coord_range);
+        street.push_back(point);
+        // std::cout << "(" << point.first << "," << point.second << ")";
+    }
+    // std::cout << std::endl;
+    //call to check street for error
+        //add here
+    return street;
+}
+
+
+void Rand_graph::generate_graph() {
+    int num_streets = random_int(2, sint_value);    
+
+    for(int i=0; i <  num_streets+1; i++) {
+        std::string word = random_word();
+        //check if random word already exists and regenerate until unique
+        while( std::find(street_names.begin(), street_names.end(), word) != street_names.end() ) {
+            word = random_word();
+        }
+        street_names.push_back(word);
+        street_points.push_back(generate_rand_street_segments());
+    }
+}
+
+//Accessors
+void Rand_graph::print_add_graph() {
+    std::string tmp;
+    for (int i=0; i < street_names.size(); i++) {
+        
+        tmp = tmp + "a \"" + street_names[i] + "\" ";
+        for (auto& p : street_points[i]) {
+            tmp = tmp + "(" + std::to_string(p.first) + "," + std::to_string(p.second) + ")";
+        }
+        tmp += "\n";
+    }
+    tmp += "g";
+    std::cout << tmp << std::endl;
+}
+
+void Rand_graph::print_remove_graph() {
+    std::string tmp;
+    for (auto& s_name : street_names) {
+        tmp = tmp + "r \"" + s_name + "\" ";
+        tmp += "\n";
+        std::cout << "r \"" << s_name << "\"" << std::endl;
+    }
 }

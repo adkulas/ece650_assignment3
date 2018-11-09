@@ -66,24 +66,12 @@ int main (int argc, char **argv) {
             return 0;
         }
     std::cerr << "[rgen_args]" << "s=" << sint_value << "n=" << nint_value << "l=" << lint_value << "c=" << cint_value << std::endl;
-
-    for(int i=0; i<40; i++) {
-        // std::cout << "generate letter: " << generate_random_char() << std::endl;
-        // random_letter();
-        // char tmp = 'A' + i;
-        // std::cout << tmp << std::endl;
-        // std::cout << random_word() << std::endl;
-        // std::cout << random_int(50,60) << std::endl;
-        // std::cout << random_int(-20,20) << std::endl;
-        // generate_rand_street_segments(nint_value, cint_value);
-        std::cout << create_random_a_command(sint_value, nint_value, cint_value) << std::endl;
-    } 
-
-    // sleep(5);
-    // std::cout << "a \"Weber Street\" (2,-1) (2,2) (5,5) (5,6) (3,8)\n"
-    //         << "a \"King Street S\" (4,2) (4,8)\n"
-    //         << "a \"Davenport Road\" (1,4) (5,8)\n"
-    //         << "g\n";
-
+    
+    while(true) {
+        Rand_graph test = Rand_graph(sint_value, nint_value, cint_value);
+        test.print_add_graph();
+        sleep(random_int(5,lint_value));
+        test.print_remove_graph();
+    }
     return 0;
 }
