@@ -50,7 +50,7 @@ char random_letter() {
     return rand_char;
 }
 
-std::string random_word(int length=1) {
+std::string random_word(int length=10) {
     std::string result;
     for(int i=0; i < length; i++) {
         result += random_letter();
@@ -146,6 +146,7 @@ void Rand_graph::print_add_graph() {
     }
     tmp += "g";
     std::cout << tmp << std::endl;
+    // std::cerr << tmp << std::endl;
 }
 
 void Rand_graph::print_remove_graph() {
