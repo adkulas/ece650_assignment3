@@ -75,23 +75,85 @@ std::vector< std::pair<int,int> > generate_rand_street_segments(int nint_value, 
     return street;
 }
 
-std::string create_random_a_command(int sint_value, int nint_value, int cint_value) {
-    std::string result;
-    int num_streets = random_int(2, sint_value);
-    std::string street_name;
-    std::vector< std::pair<int,int> > street_points;
-    
-    street_name = random_word();
-    street_points = generate_rand_street_segments(nint_value, cint_value);
+bool intersects(std::pair<int, int> point1, std::pair<int, int> point2, std::pair<int, int> point3, std::pair<int, int> point4) {
+    int x1 = point1.first;
+    int y1 = point1.second;
+    int x2 = point2.first;
+    int y2 = point2.second;
+    int x3 = point3.first;
+    int y3 = point3.second;
+    int x4 = point4.first;
+    int y4 = point4.second;
+    float m1;
+    float b1;
+    float m2;
+    float b2;
 
-    result = "a \"" + street_name + "\" ";
-    for( auto& p : street_points) {
-        result = result + "(" + std::to_string(p.first) + "," + std::to_string(p.second) + ")";
+    int seg1_xmin = std::min(x1, x2);
+    int seg1_xmax = std::max(x1, x2);
+    int seg2_xmin = std::min(x3, x4);
+    int seg2_xmax = std::max(x3, x4);
+    int seg1_ymin = std::min(y1, y2);
+    int seg1_ymax = std::max(y1, y2);
+    int seg2_ymin = std::min(y3, y4);
+    int seg2_ymax = std::max(y3, y4);
+    int x_interval_max = std::max(seg1_xmin, seg2_xmin);
+    int x_interval_min = std::min(seg1_xmax, seg2_xmax);
+    int y_interval_max = std::max(seg1_ymin, seg2_ymin);
+    int y_interval_min = std::min(seg1_ymax, seg2_ymax);
+
+    // check for vertical overlapping lines
+    if (x1 == x2 == x3 == x4) {
+        if ( (y_interval_min <= y1 && y1 <= y_interval_max) ||
+             (y_interval_min <= y2 && y2 <= y_interval_max) ||
+             (y_interval_min <= y3 && y3 <= y_interval_max) ||
+             (y_interval_min <= y4 && y4 <= y_interval_max) )  {
+            return true;
+        }
+    } else if ( x1 != x2 && x3 != x4) {    
+        m1 = (y2-y1)/(x2-x1);
+        b1 = y1-m1*x1;
+        m2 = (y4-y3)/(x4-x3);
+        b2 = y3-m2*x3;
+        // check if line equations are equal
+        if (m1 == m2 && b1 == b2) {
+            if ( 
+             ( (x_interval_min <= x1 && x1 <= x_interval_max) ||
+             (x_interval_min <= x2 && x2 <= x_interval_max) ||
+             (x_interval_min <= x3 && x3 <= x_interval_max) ||
+             (x_interval_min <= x4 && x4 <= x_interval_max) ) 
+             &&
+             ( (y_interval_min <= y1 && y1 <= y_interval_max) ||
+             (y_interval_min <= y2 && y2 <= y_interval_max) ||
+             (y_interval_min <= y3 && y3 <= y_interval_max) ||
+             (y_interval_min <= y4 && y4 <= y_interval_max) )
+                ) 
+            {
+            return true;
+            }
+        }
     }
-    result += "\n";
-    return result;
 
+    float xnum = ((x1*y2-y1*x2)*(x3-x4) - (x1-x2)*(x3*y4-y3*x4));
+    float xden = ((x1-x2)*(y3-y4) - (y1-y2)*(x3-x4));
+
+    float ynum = (x1*y2 - y1*x2)*(y3-y4) - (y1-y2)*(x3*y4-y3*x4);
+    float yden = (x1-x2)*(y3-y4) - (y1-y2)*(x3-x4);
+    if (xden == 0 || yden == 0) {
+        return false;
+    }
+
+    float xcoor = xnum / xden;
+    float ycoor = xnum / xden;
+    if ( x_interval_min <= xcoor && xcoor <= x_interval_max &&
+        y_interval_min <= ycoor && ycoor <= y_interval_max ) {
+            return true;
+        }
+        
+
+    return false;
 }
+
 
 // Constructor
 Rand_graph::Rand_graph(int sint_value, int nint_value, int cint_value):
@@ -105,16 +167,22 @@ std::vector< std::pair<int,int> > Rand_graph::generate_rand_street_segments() {
     int num_segments = random_int(1, nint_value);
     int coord_range = cint_value;
 
-    for(int i = 0; i < num_segments + 1; i++ ) {
-        std::pair<int, int> point;
-        point.first = random_int(-coord_range, coord_range);
-        point.second = random_int(-coord_range, coord_range);
-        street.push_back(point);
-        // std::cout << "(" << point.first << "," << point.second << ")";
-    }
-    // std::cout << std::endl;
-    //call to check street for error
-        //add here
+    int attempts = 0;
+    do {
+        street.clear();
+        for(int i = 0; i < num_segments + 1; i++ ) {
+            std::pair<int, int> point;
+            point.first = random_int(-coord_range, coord_range);
+            point.second = random_int(-coord_range, coord_range);
+            street.push_back(point);
+        } 
+        attempts++;
+        if (attempts > 25) {
+            std::cerr << "Error: failed to generate valid input for 25 simultaneous attempts" 
+                      << std::endl; 
+            exit(1);
+        }     
+    } while (not check_valid_input(street));
     return street;
 }
 
@@ -131,6 +199,26 @@ void Rand_graph::generate_graph() {
         street_names.push_back(word);
         street_points.push_back(generate_rand_street_segments());
     }
+}
+
+bool Rand_graph::check_valid_input(std::vector< std::pair<int,int> > street) {
+    for (int i=0; i < street.size(); i++) {
+        for (int j=i+1; j < street.size(); j++) {
+            // Check for duplicate points
+            if( (street[i].first == street[j].first) && 
+                (street[i].second == street[j].second) )
+            {
+                return false;
+            }
+            // check if any two segments overlap or intersect
+            if (i+1 < street.size() && j+1 < street.size()) {
+                if(intersects(street[i], street[i+1], street[j], street[j+1])) {
+                    return false;
+                }   
+            }
+        }
+    }
+    return true;
 }
 
 //Accessors

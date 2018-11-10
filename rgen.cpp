@@ -70,7 +70,8 @@ int main (int argc, char **argv) {
     while(true) {
         Rand_graph test = Rand_graph(sint_value, nint_value, cint_value);
         test.print_add_graph();
-        sleep(random_int(5,lint_value));
+        // sleep(random_int(5,lint_value));
+        usleep(200000);
         test.print_remove_graph();
     }
     return 0;

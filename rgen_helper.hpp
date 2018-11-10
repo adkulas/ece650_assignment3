@@ -14,7 +14,7 @@ std::string random_word(int length);
 
 std::vector< std::pair<int,int> > generate_rand_street_segments(int nint_value, int coord_range);
 
-std::string create_random_a_command(int sint_value, int nint_value, int cint_value);
+bool intersects(std::pair<int, int> point1, std::pair<int, int> point2, std::pair<int, int> point3, std::pair<int, int> point4);
 
 class Rand_graph {
 private:
@@ -23,7 +23,7 @@ private:
     int sint_value, nint_value, cint_value;
 
     std::vector< std::pair<int,int> > generate_rand_street_segments();
-    bool check_valid_input(std::vector< std::pair<int,int> > edges);
+    bool check_valid_input(std::vector< std::pair<int,int> > street);
     void generate_graph();
 
 public:

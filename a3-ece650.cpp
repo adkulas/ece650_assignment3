@@ -15,6 +15,9 @@ int a3_input(void) {
         std::getline(std::cin, line);
         if (line.size () > 0)
             std::cout << line << std::endl;
+        
+        // usleep(100000);
+        // std::cout << "s 1 4" << std::endl;
     }
     return 0;
 }
