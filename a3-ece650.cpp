@@ -16,7 +16,7 @@ int a3_input(void) {
         if (line.size () > 0)
             std::cout << line << std::endl;
         
-        // usleep(100000);
+        // usleep(50000);
         // std::cout << "s 1 4" << std::endl;
     }
     return 0;
@@ -81,8 +81,6 @@ int main (int argc, char **argv) {
         default:
             return 0;
         }
-    std::cout << "s=" << sint_value << "n=" << nint_value << "l=" << lint_value << "c=" << cint_value << std::endl;
-
     std::vector<pid_t> kids;
     pid_t child_pid;    
     // create pipes
@@ -154,13 +152,28 @@ int main (int argc, char **argv) {
     }
     kids.push_back(child_pid);
 
-    // redirect stdout from the pipe
-    dup2(pipe_a1_to_a2[1], STDOUT_FILENO);
-    close(pipe_a1_to_a2[0]);
-    close(pipe_a1_to_a2[1]);
+    //-----------------------------------
+    // RUN a3-ece650 input loop PROGARM CONCURRENTLY   
+    // ----------------------------------  
+    child_pid = fork();
+    if (child_pid == 0) {
+        // redirect stdout to the pipe
+        dup2(pipe_a1_to_a2[1], STDOUT_FILENO);
+        close(pipe_a1_to_a2[0]);
+        close(pipe_a1_to_a2[1]);
+        
+        return a3_input();
+    } 
+    else if (child_pid < 0) {
+        std::cerr << "Error: could not fork a3 loop" << std::endl;
+        return 1;  
+    }
+    kids.push_back(child_pid);
 
-    int result = a3_input();
-    
+    int monitor;
+    wait(&monitor);
+    // waitpid(kids[0], &monitor, WNOHANG);
+
     // send kill signal to all children
     for (pid_t k : kids) {
         int status;
@@ -169,5 +182,5 @@ int main (int argc, char **argv) {
         std::cout << "process status: " << status << std::endl;
     }
 
-    return result;
+    return 0;
 }

@@ -18,12 +18,14 @@ T read_urandom() {
         if(!urandom) //Read Failed
         {
             std::cerr << "Failed to read from /dev/urandom" << std::endl;
+            exit(2);
         }
         urandom.close(); //close stream
     }
     else //Open failed
     {
         std::cerr << "Failed to open /dev/urandom" << std::endl;
+        exit(2);
     }
     return random_value;
 }

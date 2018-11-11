@@ -65,13 +65,12 @@ int main (int argc, char **argv) {
         default:
             return 0;
         }
-    std::cerr << "[rgen_args]" << "s=" << sint_value << "n=" << nint_value << "l=" << lint_value << "c=" << cint_value << std::endl;
     
     while(true) {
         Rand_graph test = Rand_graph(sint_value, nint_value, cint_value);
         test.print_add_graph();
-        // sleep(random_int(5,lint_value));
-        usleep(200000);
+        sleep(random_int(5,lint_value));
+        // usleep(200000);
         test.print_remove_graph();
     }
     return 0;

@@ -19,6 +19,10 @@ bool Graph::breadth_first_search(int src, int dest) {
     std::list<int> queue;
     bool visited[vertices];
 
+    if (vertices < 1) {
+        return false;
+    }
+    
     // initialization: visted to false dist to inf and no predecessors
     for (int i = 0; i < vertices; i++) {
         visited[i] = false;
