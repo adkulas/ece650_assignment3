@@ -93,7 +93,6 @@ int main (int argc, char **argv) {
     child_pid = fork();
     if (child_pid == 0) {
         // redirect stdout to the pipe
-        std::cout << "INFO: Starting RGEN Program" << std::endl;
         dup2(pipe_rgen_to_a1[1], STDOUT_FILENO);
         close(pipe_rgen_to_a1[0]);
         close(pipe_rgen_to_a1[1]);
