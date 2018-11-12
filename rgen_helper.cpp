@@ -88,7 +88,7 @@ bool intersects(std::pair<int, int> point1, std::pair<int, int> point2, std::pai
     int y_interval_min = std::min(seg1_ymax, seg2_ymax);
 
     // check for vertical overlapping lines
-    if (x1 == x2 == x3 == x4) {
+    if ( x1 == x2 && x2 == x3 && x3 == x4 ) {
         if ( (y_interval_min <= y1 && y1 <= y_interval_max) ||
              (y_interval_min <= y2 && y2 <= y_interval_max) ||
              (y_interval_min <= y3 && y3 <= y_interval_max) ||
@@ -129,7 +129,7 @@ bool intersects(std::pair<int, int> point1, std::pair<int, int> point2, std::pai
     }
 
     float xcoor = xnum / xden;
-    float ycoor = xnum / xden;
+    float ycoor = ynum / yden;
     if ( x_interval_min <= xcoor && xcoor <= x_interval_max &&
         y_interval_min <= ycoor && ycoor <= y_interval_max ) {
             return true;
