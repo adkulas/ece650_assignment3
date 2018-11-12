@@ -170,7 +170,7 @@ std::vector< std::pair<int,int> > Rand_graph::generate_rand_street_segments() {
 void Rand_graph::generate_graph() {
     int num_streets = random_int(2, sint_value);    
 
-    for(int i=0; i <  num_streets+1; i++) {
+    for(int i=0; i <  num_streets; i++) {
         std::string word = random_word();
         //check if random word already exists and regenerate until unique
         while( std::find(street_names.begin(), street_names.end(), word) != street_names.end() ) {
