@@ -134,11 +134,8 @@ bool intersects(std::pair<int, int> point1, std::pair<int, int> point2, std::pai
         y_interval_min <= ycoor && ycoor <= y_interval_max ) {
             return true;
         }
-        
-
     return false;
 }
-
 
 // Constructor
 Rand_graph::Rand_graph(int sint_value, int nint_value, int cint_value):
