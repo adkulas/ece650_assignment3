@@ -22,6 +22,9 @@ bool Graph::breadth_first_search(int src, int dest) {
     if (vertices < 1) {
         return false;
     }
+    if (src >= vertices || dest >= vertices) {
+        return false;
+    }
     
     // initialization: visted to false dist to inf and no predecessors
     for (int i = 0; i < vertices; i++) {

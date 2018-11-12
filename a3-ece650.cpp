@@ -15,9 +15,6 @@ int a3_input(void) {
         std::getline(std::cin, line);
         if (line.size () > 0)
             std::cout << line << std::endl;
-        
-        // usleep(50000);
-        // std::cout << "s 1 4" << std::endl;
     }
     return 0;
 }
@@ -172,14 +169,13 @@ int main (int argc, char **argv) {
 
     int monitor;
     wait(&monitor);
-    // waitpid(kids[0], &monitor, WNOHANG);
 
     // send kill signal to all children
     for (pid_t k : kids) {
         int status;
         kill (k, SIGTERM);
         waitpid(k, &status, 0);
-        std::cout << "process status: " << status << std::endl;
+        // std::cout << "process status: " << status << std::endl;
     }
 
     return 0;
