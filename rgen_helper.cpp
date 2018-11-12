@@ -60,23 +60,6 @@ std::string random_word(int length=10) {
     return result;
 }
 
-std::vector< std::pair<int,int> > generate_rand_street_segments(int nint_value, int coord_range) {
-    std::vector< std::pair<int,int> > street;
-    int num_segments = random_int(1, nint_value);
-
-    for(int i = 0; i < num_segments + 1; i++ ) {
-        std::pair<int, int> point;
-        point.first = random_int(-coord_range, coord_range);
-        point.second = random_int(-coord_range, coord_range);
-        street.push_back(point);
-        std::cout << "(" << point.first << "," << point.second << ")";
-    }
-    std::cout << std::endl;
-    //call to check street for error
-        //add here
-    return street;
-}
-
 bool intersects(std::pair<int, int> point1, std::pair<int, int> point2, std::pair<int, int> point3, std::pair<int, int> point4) {
     int x1 = point1.first;
     int y1 = point1.second;
@@ -180,14 +163,12 @@ std::vector< std::pair<int,int> > Rand_graph::generate_rand_street_segments() {
         } 
         attempts++;
         if (attempts > 25) {
-            std::cerr << "Error: failed to generate valid input for 25 simultaneous attempts" 
-                      << std::endl; 
-            exit(1);
+            std::cerr << "Error: failed to generate valid input for " << attempts << " simultaneous attempts" 
+                      << std::endl;
         }     
     } while (not check_valid_input(street));
     return street;
 }
-
 
 void Rand_graph::generate_graph() {
     int num_streets = random_int(2, sint_value);    

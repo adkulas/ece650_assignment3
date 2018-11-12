@@ -15,6 +15,6 @@ add_executable(a3-ece650 a3-ece650.cpp )
 add_executable(rgen rgen.cpp rgen_helper.cpp )
 
 # create the executable for tests
-add_executable(tests test.cpp)
+# add_executable(tests test.cpp)
 install(PROGRAMS a1-ece650.py DESTINATION bin)
 install(TARGETS a2-ece650 a3-ece650 rgen RUNTIME DESTINATION bin)
